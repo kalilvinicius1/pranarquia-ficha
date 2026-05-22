@@ -843,7 +843,7 @@ function AuthPanel({ user, sheet, setSheet, setStatus }) {
           savedAt: data.savedAt || "",
         };
       })
-      .sort((first, second) => second.savedAt.localeCompare(first.savedAt));
+      .sort((first, second) => first.title.localeCompare(second.title, "pt-BR"));
 
     setSheetList(sheets);
   };
@@ -901,10 +901,17 @@ function AuthPanel({ user, sheet, setSheet, setStatus }) {
     setStatus("Ficha carregada da nuvem.");
   };
 
+  const selectCloudSheet = (id) => {
+    setActiveSheetId(id);
+    if (id) {
+      loadCloud(id);
+    }
+  };
+
   const createNewSheet = () => {
     setSheet(clone(defaultSheet));
     setActiveSheetId("");
-    setStatus("Nova ficha criada. Salve na nuvem para guardar.");
+    setStatus("Nova ficha criada.");
   };
 
   const deleteCloudSheet = async () => {
@@ -916,6 +923,42 @@ function AuthPanel({ user, sheet, setSheet, setStatus }) {
     setActiveSheetId("");
     await refreshSheetList();
     setStatus("Ficha removida da nuvem.");
+  };
+
+  const shareCloudSheet = async () => {
+    if (!db || !user) {
+      return;
+    }
+
+    const id = activeSheetId || crypto.randomUUID();
+    const sheetData = {
+      ...sheet,
+      id,
+      savedAt: new Date().toISOString(),
+    };
+
+    if (!activeSheetId) {
+      await setDoc(doc(db, "users", user.uid, "sheets", id), sheetData);
+      setActiveSheetId(id);
+      await refreshSheetList();
+    }
+
+    await setDoc(doc(db, "sharedSheets", id), {
+      ownerId: user.uid,
+      sheet: sheetData,
+      title: sheet.fields.characterName || "Ficha sem nome",
+      sharedAt: new Date().toISOString(),
+    });
+
+    const shareUrl = `${window.location.origin}${window.location.pathname}?share=${id}`;
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(shareUrl);
+      setStatus("Link de compartilhamento copiado.");
+      return;
+    }
+
+    window.prompt("Copie o link de compartilhamento:", shareUrl);
+    setStatus("Link de compartilhamento gerado.");
   };
 
   if (!isFirebaseConfigured) {
@@ -931,14 +974,17 @@ function AuthPanel({ user, sheet, setSheet, setStatus }) {
     return (
       <section className="auth-panel">
         <strong>{user.email}</strong>
-        <select className="sheet-select" value={activeSheetId} onChange={(event) => setActiveSheetId(event.target.value)} aria-label="Selecionar ficha salva">
-          <option value="">Nova ficha / não salva</option>
-          {sheetList.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.title}
-            </option>
-          ))}
-        </select>
+        <label className="sheet-picker">
+          <span>Minhas fichas</span>
+          <select className="sheet-select" value={activeSheetId} onChange={(event) => selectCloudSheet(event.target.value)} aria-label="Selecionar ficha salva">
+            <option value="">Nova ficha / não salva</option>
+            {sheetList.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.title}
+              </option>
+            ))}
+          </select>
+        </label>
         <div className="auth-actions">
           <button className="action-button" type="button" onClick={saveCloud}>
             Salvar na nuvem
@@ -948,6 +994,9 @@ function AuthPanel({ user, sheet, setSheet, setStatus }) {
           </button>
           <button className="action-button" type="button" onClick={createNewSheet}>
             Nova ficha
+          </button>
+          <button className="action-button" type="button" onClick={shareCloudSheet}>
+            Compartilhar
           </button>
           <button className="action-button remove-button" type="button" onClick={deleteCloudSheet} disabled={!activeSheetId}>
             Excluir
@@ -980,14 +1029,34 @@ function AuthPanel({ user, sheet, setSheet, setStatus }) {
 export default function App() {
   const [sheet, setSheet] = useState(loadInitialSheet);
   const [user, setUser] = useState(null);
-  const [status, setStatus] = useState("Salvo localmente");
+  const [status, setStatus] = useState("");
 
   const xpRest = useMemo(() => Math.max((Number(sheet.fields.xpTotal) || 0) - (Number(sheet.fields.xpSpent) || 0), 0), [sheet.fields.xpTotal, sheet.fields.xpSpent]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...sheet, savedAt: new Date().toISOString() }));
-    setStatus("Salvo localmente");
   }, [sheet]);
+
+  useEffect(() => {
+    const shareId = new URLSearchParams(window.location.search).get("share");
+    if (!shareId || !db) {
+      return;
+    }
+
+    getDoc(doc(db, "sharedSheets", shareId))
+      .then((snapshot) => {
+        if (!snapshot.exists()) {
+          setStatus("Link de compartilhamento não encontrado.");
+          return;
+        }
+
+        setSheet(normalizeSheet(snapshot.data().sheet));
+        setStatus("Ficha compartilhada carregada.");
+      })
+      .catch(() => {
+        setStatus("Não foi possível abrir o link compartilhado.");
+      });
+  }, []);
 
   useEffect(() => {
     if (!auth) {
@@ -1045,9 +1114,11 @@ export default function App() {
             Carregar ficha
             <input type="file" accept="application/json,.json" onChange={(event) => event.target.files[0] && loadSheetFile(event.target.files[0])} />
           </label>
-          <span className="save-status" aria-live="polite">
-            {status}
-          </span>
+          {status && (
+            <span className="save-status" aria-live="polite">
+              {status}
+            </span>
+          )}
         </div>
         <AuthPanel user={user} sheet={sheet} setSheet={setSheet} setStatus={setStatus} />
 
