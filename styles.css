@@ -1,0 +1,838 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap");
+
+@font-face {
+  font-family: "Floren";
+  src: local("Floren");
+  font-display: swap;
+}
+
+:root {
+  --ink: #18110f;
+  --muted: #5d514b;
+  --paper: #fbfaf5;
+  --line: #25201e;
+  --soft-line: rgba(24, 17, 15, 0.34);
+  --blue: #151596;
+  --red: #9f1018;
+  --pale: #f1ede3;
+  --shadow: rgba(0, 0, 0, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  font-family: "IM Fell English", Georgia, "Times New Roman", serif;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(21, 21, 150, 0.09), transparent 24rem),
+    radial-gradient(circle at 82% 4%, rgba(159, 16, 24, 0.08), transparent 24rem),
+    linear-gradient(135deg, #ddd8cc, #f6f1e6 42%, #d8d0c1);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.sheet-shell {
+  min-height: 100vh;
+  padding: 22px;
+  display: grid;
+  gap: 28px;
+}
+
+.sheet {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: clamp(18px, 3vw, 40px);
+  border: 4px double var(--line);
+  border-radius: 28px;
+  box-shadow: 0 22px 56px var(--shadow);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.62), transparent 190px),
+    linear-gradient(90deg, transparent 0 48%, rgba(24, 17, 15, 0.045) 48% 52%, transparent 52%),
+    repeating-linear-gradient(0deg, rgba(24, 17, 15, 0.025) 0 1px, transparent 1px 9px),
+    var(--paper);
+}
+
+.brand-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.sheet-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: -8px 0 22px;
+}
+
+.action-button {
+  display: inline-grid;
+  place-items: center;
+  min-height: 32px;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-weight: 700;
+  padding: 4px 12px;
+}
+
+.action-button:hover,
+.action-button:focus-visible {
+  background: rgba(159, 16, 24, 0.1);
+  outline: none;
+}
+
+.action-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.46;
+}
+
+.file-action {
+  position: relative;
+  grid-template-columns: none;
+}
+
+.file-action input {
+  position: absolute;
+  width: 1px;
+  min-height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.save-status {
+  min-width: 96px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-style: italic;
+}
+
+.auth-panel {
+  width: min(720px, 100%);
+  margin: -8px auto 24px;
+  padding: 10px 14px;
+  border: 1px solid var(--soft-line);
+  background: rgba(255, 255, 255, 0.34);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.auth-panel strong {
+  font-family: "IM Fell English SC", "IM Fell English", Georgia, serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.auth-form {
+  display: grid;
+  grid-template-columns: auto minmax(160px, 1fr) minmax(130px, 0.8fr) auto;
+  text-align: left;
+}
+
+.auth-form input {
+  border: 1px solid var(--line);
+  min-height: 32px;
+}
+
+.auth-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.sheet-select {
+  width: min(260px, 100%);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.52);
+}
+
+.brand-header p {
+  margin: 0 0 4px;
+  font-family: "Cinzel", Georgia, serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 700;
+}
+
+h1 {
+  font-family: "Floren", serif;
+  font-size: clamp(3rem, 7.8vw, 6.1rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-family: "IM Fell English SC", "IM Fell English", Georgia, serif;
+  font-size: clamp(1.2rem, 2.5vw, 2.05rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+h3 {
+  font-family: "IM Fell English SC", "IM Fell English", Georgia, serif;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.top-grid {
+  display: grid;
+  grid-template-columns: minmax(330px, 1fr) 150px minmax(420px, 1.18fr);
+  gap: clamp(18px, 2.4vw, 28px);
+  align-items: start;
+}
+
+.identity-block {
+  display: grid;
+  gap: 8px;
+}
+
+label {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 8px;
+  align-items: end;
+}
+
+label span {
+  font-family: "IM Fell English SC", "IM Fell English", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 30px;
+  border: 0;
+  border-bottom: 2px solid var(--line);
+  border-radius: 0;
+  color: var(--blue);
+  background: rgba(255, 255, 255, 0.34);
+  outline: none;
+  padding: 3px 6px;
+  line-height: 1.2;
+}
+
+input:not([readonly]),
+textarea {
+  color: var(--red);
+}
+
+input[readonly] {
+  color: var(--ink);
+}
+
+textarea {
+  min-height: 74px;
+  border: 1px solid var(--line);
+  resize: vertical;
+  line-height: 1.3;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 3px 0 rgba(21, 21, 150, 0.15);
+}
+
+.wide-field {
+  align-items: start;
+}
+
+.identity-block .wide-field {
+  grid-template-columns: 104px minmax(0, 1fr);
+}
+
+.rune-box {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+}
+
+.rune-box > span {
+  font-family: "IM Fell English SC", "IM Fell English", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rune-mark {
+  display: block;
+  width: 116px;
+  aspect-ratio: 1;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.34);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.rune-mark.has-image {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.rune-box select {
+  width: 136px;
+  min-height: 28px;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  text-align: center;
+}
+
+.track-stack {
+  display: grid;
+  gap: 14px;
+}
+
+.compact-panel h2 {
+  margin-bottom: 7px;
+  text-align: center;
+  font-size: 1.18rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.split-track {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  gap: 7px;
+  align-items: center;
+  justify-content: center;
+}
+
+.prana-track {
+  grid-template-columns: auto auto auto;
+  gap: 7px;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.prana-group {
+  display: grid;
+  gap: 3px;
+  justify-items: center;
+}
+
+.prana-dot-track {
+  gap: 5px;
+}
+
+.track-label,
+.track-divider,
+.track-caption {
+  font-family: "IM Fell English SC", "IM Fell English", Georgia, serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.track-caption {
+  margin-top: 3px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.section-ruler {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 14px;
+  align-items: center;
+  margin: 28px 0 22px;
+}
+
+.section-ruler span {
+  border-top: 2px solid var(--line);
+}
+
+.domains-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.domain {
+  min-width: 0;
+}
+
+.domain + .domain {
+  border-left: 2px solid var(--soft-line);
+  padding-left: 26px;
+}
+
+.domain h2 {
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.attribute-row,
+.skill-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.8fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 30px;
+}
+
+.row-label {
+  border: 0;
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+  font-style: italic;
+  text-align: left;
+  padding: 0;
+}
+
+.row-label:hover,
+.row-label:focus-visible {
+  color: var(--blue);
+  outline: none;
+}
+
+.dot-track {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 6px;
+  justify-content: start;
+}
+
+.dot {
+  width: 15px;
+  aspect-ratio: 1;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  cursor: pointer;
+  padding: 0;
+}
+
+.read-only-dot {
+  cursor: default;
+}
+
+.removable-dot {
+  cursor: pointer;
+}
+
+.dot.is-filled {
+  background: var(--ink);
+}
+
+.dot:hover,
+.dot:focus-visible,
+.vitality-box:hover,
+.vitality-box:focus-visible {
+  box-shadow: 0 0 0 3px rgba(21, 21, 150, 0.18);
+  outline: none;
+}
+
+.read-only-dot:hover {
+  box-shadow: none;
+}
+
+.removable-dot:hover,
+.removable-dot:focus-visible {
+  box-shadow: 0 0 0 3px rgba(159, 16, 24, 0.18);
+  outline: none;
+}
+
+.balance-control {
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.balance-control:hover,
+.balance-control:focus-visible {
+  color: var(--red);
+  outline: none;
+  text-decoration: underline;
+}
+
+.vitality-row {
+  margin: 18px 0 17px;
+}
+
+.vitality-title {
+  margin-bottom: 7px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.box-track,
+.milestone-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 16px);
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.vitality-box {
+  width: 16px;
+  aspect-ratio: 1;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+}
+
+.vitality-box.is-light {
+  background: linear-gradient(90deg, var(--red) 0 50%, var(--paper) 50%);
+}
+
+.vitality-box.is-heavy {
+  background: var(--red);
+}
+
+.vitality-box.is-light::before {
+  content: "";
+  position: absolute;
+  inset: 3px auto 3px 6px;
+  border-left: 2px solid var(--paper);
+}
+
+.vitality-box.is-heavy::before,
+.vitality-box.is-heavy::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 6px;
+  border-top: 2px solid var(--paper);
+}
+
+.vitality-box.is-heavy::before {
+  transform: rotate(45deg);
+}
+
+.vitality-box.is-heavy::after {
+  transform: rotate(-45deg);
+}
+
+.skill-block {
+  margin-top: 3px;
+}
+
+.specialization-field {
+  grid-template-columns: 1fr;
+  gap: 2px;
+  margin: 3px 0 8px 22px;
+}
+
+.specialization-field span {
+  font-size: 0.75rem;
+}
+
+.specialization-field input {
+  min-height: 26px;
+  color: var(--red);
+}
+
+.lower-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
+  gap: 28px;
+}
+
+.trait-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.trait-list {
+  display: grid;
+  gap: 10px;
+}
+
+.trait-card {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) 30px;
+  gap: 6px;
+  align-items: start;
+}
+
+.trait-card textarea {
+  grid-column: 2 / 4;
+  min-height: 64px;
+}
+
+.trait-index {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--line);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.progress-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.add-button,
+.small-button {
+  border: 1px solid var(--line);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.42);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.add-button {
+  width: 100%;
+  min-height: 30px;
+  margin-top: 9px;
+}
+
+.small-button {
+  width: 30px;
+  min-height: 30px;
+}
+
+.remove-button {
+  color: var(--red);
+}
+
+.add-button:hover,
+.add-button:focus-visible,
+.small-button:hover,
+.small-button:focus-visible {
+  background: rgba(21, 21, 150, 0.1);
+  outline: none;
+}
+
+.progress-panel label,
+.xp-grid label {
+  grid-template-columns: minmax(130px, 1fr) minmax(90px, 0.7fr);
+}
+
+.conflict-field {
+  align-items: center;
+}
+
+.conflict-field input {
+  min-height: 48px;
+  font-size: 1.15rem;
+  padding: 8px 10px;
+}
+
+.progress-panel .wide-field {
+  grid-template-columns: 1fr;
+}
+
+.milestone-row {
+  grid-template-columns: repeat(7, 16px);
+  justify-content: start;
+}
+
+.milestone-field {
+  display: grid;
+  grid-template-columns: minmax(90px, auto) 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.milestone-field > span {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.xp-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.type-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 34px;
+}
+
+.type-row label {
+  display: flex;
+  grid-template-columns: none;
+  gap: 5px;
+  align-items: center;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.type-row input {
+  width: 14px;
+  min-height: 14px;
+}
+
+.manifestation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 92px 18px;
+  min-height: 860px;
+  align-items: start;
+}
+
+.manifestation-card {
+  display: grid;
+  gap: 8px;
+}
+
+.manifestation-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  border: 1px solid var(--line);
+  padding: 4px 8px;
+}
+
+.manifestation-head h3 {
+  margin: 0;
+}
+
+.manifestation-head strong {
+  font-size: 1.2rem;
+}
+
+.power-card {
+  display: grid;
+  gap: 6px;
+}
+
+.power-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 6px;
+}
+
+.power-card textarea {
+  min-height: 96px;
+}
+
+@media (max-width: 980px) {
+  .top-grid,
+  .domains-grid,
+  .lower-grid,
+  .trait-columns,
+  .manifestation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .domain + .domain {
+    border-left: 0;
+    border-top: 2px solid var(--soft-line);
+    padding-left: 0;
+    padding-top: 22px;
+  }
+
+  .manifestation-grid {
+    gap: 22px;
+    min-height: auto;
+  }
+
+  .top-grid {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .track-stack {
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+}
+
+@media (max-width: 560px) {
+  .sheet-shell {
+    padding: 10px;
+  }
+
+  .sheet {
+    border-radius: 16px;
+  }
+
+  label,
+  .progress-panel label,
+  .xp-grid label {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-form {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .split-track,
+  .prana-track {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+  }
+
+  .prana-dot-track {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(8, 15px);
+    justify-content: center;
+  }
+
+  .attribute-row,
+  .skill-row {
+    grid-template-columns: 1fr;
+  }
+
+  .section-ruler {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .sheet-shell {
+    padding: 0;
+  }
+
+  .sheet {
+    box-shadow: none;
+    page-break-after: always;
+  }
+}
