@@ -194,7 +194,10 @@ const defaultSheet = {
     specializations: {},
     openSpecialization: null,
     vitalityMarks: { body: {}, mind: {}, spirit: {} },
-    balance: 0,
+    balance: {
+      decline: 0,
+      ascension: 0,
+    },
     prana: { available: PRANA_TOTAL },
     milestones: 0,
     runeGroup: "caalesi",
@@ -229,11 +232,15 @@ function normalizeSheet(data) {
   const sheet = clone(defaultSheet);
   deepMerge(sheet, data || {});
 
-  if (typeof sheet.state.balance === "object") {
-    sheet.state.balance = (Number(sheet.state.balance.ascension) || 0) - (Number(sheet.state.balance.decline) || 0);
+  if (typeof sheet.state.balance === "number") {
+    sheet.state.balance = {
+      decline: sheet.state.balance < 0 ? Math.abs(sheet.state.balance) : 0,
+      ascension: sheet.state.balance > 0 ? sheet.state.balance : 0,
+    };
   }
 
-  sheet.state.balance = clamp(Number(sheet.state.balance) || 0, -BALANCE_MAX, BALANCE_MAX);
+  sheet.state.balance.decline = clamp(Number(sheet.state.balance.decline) || 0, 0, BALANCE_MAX);
+  sheet.state.balance.ascension = clamp(Number(sheet.state.balance.ascension) || 0, 0, BALANCE_MAX);
   sheet.state.prana.available = clamp(Number(sheet.state.prana.available) || 0, 0, PRANA_TOTAL);
   sheet.state.milestones = clamp(Number(sheet.state.milestones) || 0, 0, MILESTONE_MAX);
 
@@ -306,26 +313,32 @@ function DotTrack({ max, value, onSelect, label }) {
 }
 
 function BalanceTrack({ value, updateDraft }) {
-  const decline = value < 0 ? Math.abs(value) : 0;
-  const ascension = value > 0 ? value : 0;
+  const decline = value.decline || 0;
+  const ascension = value.ascension || 0;
 
   const pull = (side) => {
     updateDraft((draft) => {
       if (side === "ascension") {
-        draft.state.balance = clamp(draft.state.balance + 1, -BALANCE_MAX, BALANCE_MAX);
+        if (draft.state.balance.decline > 0) {
+          draft.state.balance.decline -= 1;
+        }
+        draft.state.balance.ascension = clamp(draft.state.balance.ascension + 1, 0, BALANCE_MAX);
       } else {
-        draft.state.balance = clamp(draft.state.balance - 1, -BALANCE_MAX, BALANCE_MAX);
+        if (draft.state.balance.ascension > 0) {
+          draft.state.balance.ascension -= 1;
+        }
+        draft.state.balance.decline = clamp(draft.state.balance.decline + 1, 0, BALANCE_MAX);
       }
     });
   };
 
   const remove = (side) => {
     updateDraft((draft) => {
-      if (side === "decline" && draft.state.balance < 0) {
-        draft.state.balance += 1;
+      if (side === "decline" && draft.state.balance.decline > 0) {
+        draft.state.balance.decline -= 1;
       }
-      if (side === "ascension" && draft.state.balance > 0) {
-        draft.state.balance -= 1;
+      if (side === "ascension" && draft.state.balance.ascension > 0) {
+        draft.state.balance.ascension -= 1;
       }
     });
   };
