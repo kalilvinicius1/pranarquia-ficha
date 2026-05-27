@@ -56,7 +56,13 @@ const runeGroups = {
   },
   tenebri: {
     label: "Tenebri",
-    runes: [{ key: "umbra", label: "Umbra", file: "assets/runas/umbra.png" }],
+    runes: [
+      { key: "sacerdote-da-noite", label: "Sacerdote da Noite", file: "assets/runas/sacerdote-da-noite.png" },
+      { key: "purificador", label: "Purificador", file: "assets/runas/purificador.png" },
+      { key: "colecionador", label: "Colecionador", file: "assets/runas/colecionador.png" },
+      { key: "coveiro-de-si-mesmo", label: "Coveiro de Si Mesmo", file: "assets/runas/coveiro-de-si-mesmo.png" },
+      { key: "profanador", label: "Profanador", file: "assets/runas/profanador.png" },
+    ],
   },
 };
 
@@ -147,6 +153,7 @@ const defaultSheet = {
     reverieDescription: "",
     conflict: "Mentira Fundamental",
     conflictDescription: "",
+    inventory: "",
     xpTotal: 10,
     xpSpent: 0,
     typeDaemoi: false,
@@ -692,6 +699,10 @@ function ProgressPanel({ sheet, setField, updateDraft }) {
           ))}
         </div>
       </div>
+      <label className="inventory-field">
+        <span>Inventário</span>
+        <textarea value={sheet.fields.inventory} placeholder="Itens, equipamentos e recursos do personagem" onChange={(event) => setField("inventory", event.target.value)} />
+      </label>
       <div className="xp-grid">
         <label>
           <span>Experiência total</span>
@@ -1145,7 +1156,7 @@ export default function App() {
           ))}
         </section>
 
-        <SectionRuler>Progressão, Traços e Devaneio</SectionRuler>
+        <SectionRuler>Progressão e Traços</SectionRuler>
         <section className="lower-grid" aria-label="Traços e progressão">
           <Traits sheet={sheet} updateDraft={updateDraft} />
           <ProgressPanel sheet={{ ...sheet, xpRest }} setField={setField} updateDraft={updateDraft} />

@@ -671,6 +671,14 @@ textarea:focus {
   grid-template-columns: 1fr;
 }
 
+.inventory-field {
+  grid-template-columns: 1fr;
+}
+
+.inventory-field textarea {
+  min-height: 118px;
+}
+
 .milestone-row {
   grid-template-columns: repeat(7, 16px);
   justify-content: start;
